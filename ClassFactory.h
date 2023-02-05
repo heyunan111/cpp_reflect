@@ -6,7 +6,6 @@
 #define CPP_REFLECT_CLASSFACTORY_H
 #include <map>
 #include <string>
-#include <iostream>
 #include "sigleton.h"
 
 namespace hyn::reflect {
@@ -15,7 +14,6 @@ namespace hyn::reflect {
     public:
         Object()= default;
         virtual ~Object() = default;
-        virtual void show() = 0;
     };
 
     typedef Object* (*create_object)();
