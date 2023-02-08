@@ -4,13 +4,14 @@
 
 #ifndef CPP_REFLECT_CLASSREGISTER_H
 #define CPP_REFLECT_CLASSREGISTER_H
+
 #include "ClassFactory.h"
 
 namespace hyn::reflect {
     class ClassRegister {
     public:
-        ClassRegister(const std::string& class_name,create_object method) {
-            sigleton::Sigleton<ClassFactory>::get_instance()->register_class(class_name,method);
+        ClassRegister(const std::string &class_name, create_object method) {
+            sigleton::Sigleton<ClassFactory>::get_instance()->register_class(class_name, method);
         }
     };
 
