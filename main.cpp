@@ -1,6 +1,9 @@
 #include <iostream>
 #include <stddef.h>
-using namespace std;
-int main() {
+#include "test_classA_register.h"
 
+using namespace std;
+
+int main() {
+    test_classA_register();
 }

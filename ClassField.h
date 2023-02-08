@@ -6,8 +6,8 @@
 #define CPP_REFLECT_CLASSFIELD_H
 
 #include <utility>
-
-#include "ClassFactory.h"
+#include <cstdlib>
+#include <string>
 
 namespace hyn::reflect {
 
@@ -30,7 +30,7 @@ namespace hyn::reflect {
             return m_type;
         }
 
-        size_t get_offset() {
+        size_t get_offset() const {
             return m_offset;
         }
 
