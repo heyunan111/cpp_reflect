@@ -26,6 +26,7 @@ namespace hyn::reflect {
 #define REGISTER_CLASS(class_name)                          \
     hyn::reflect::Object* creat_object_##class_name() {     \
         hyn::reflect::Object* obj = new class_name();       \
+        obj->set_m_class_name(#class_name);                 \
         return obj;                                         \
     }                                                       \
     hyn::reflect::ClassRegister class_register_##class_name (#class_name,creat_object_##class_name)

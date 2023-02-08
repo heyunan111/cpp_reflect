@@ -30,7 +30,7 @@ namespace hyn::reflect {
             return m_type;
         }
 
-        size_t get_offset() const {
+        [[nodiscard]] size_t get_offset() const {
             return m_offset;
         }
 

@@ -13,16 +13,37 @@
 
 namespace hyn::reflect {
 
+
     class Object {
     public:
         Object() = default;
 
         virtual ~Object() = default;
 
-        virtual void show() = 0;
+        int get_field_count();
+
+        ClassField *get_field(int pos);
+
+        ClassField *get_field(const std::string &field_name);
+
+        template<typename T>
+        void get(const std::string &field_name, T &value);
+
+        template<typename T>
+        void set(const std::string &field_name, const T &value);
+
+        virtual void show() = 0;//for test
+
+    private:
+        std::string m_class_name;
+    public:
+        [[nodiscard]] const std::string &get_m_class_name() const;
+
+        void set_m_class_name(const std::string &class_name);
     };
 
     typedef Object *(*create_object)();
+
 
     class ClassFactory {
         friend sigleton::Sigleton<ClassFactory>;
@@ -48,6 +69,23 @@ namespace hyn::reflect {
         std::map<std::string, hyn::reflect::create_object> m_class_map;
         std::map<std::string, std::vector<ClassField *>> m_class_fields;
     };
+}
+
+
+template<typename T>
+void hyn::reflect::Object::set(const std::string &field_name, const T &value) {
+    ClassFactory *factory = sigleton::Sigleton<ClassFactory>::get_instance();
+    ClassField *field = factory->get_field(m_class_name, field_name);
+    size_t offset = field->get_offset();
+    *(T *) ((unsigned char *) (this) + offset) = value;
+}
+
+template<typename T>
+void hyn::reflect::Object::get(const std::string &field_name, T &value) {
+    ClassFactory *factory = sigleton::Sigleton<ClassFactory>::get_instance();
+    ClassField *field = factory->get_field(m_class_name, field_name);
+    size_t offset = field->get_offset();
+    value = *(T *) ((unsigned char *) (this) + offset);
 }
 
 
