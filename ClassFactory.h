@@ -5,11 +5,13 @@
 #ifndef CPP_REFLECT_CLASSFACTORY_H
 #define CPP_REFLECT_CLASSFACTORY_H
 
+#include <functional>
 #include <map>
 #include <string>
 #include <vector>
 #include "sigleton.h"
 #include "ClassField.h"
+#include "ClassMethod.h"
 
 namespace hyn::reflect {
 
@@ -31,6 +33,8 @@ namespace hyn::reflect {
 
         template<typename T>
         void set(const std::string &field_name, const T &value);
+
+        void call(const std::string &method_name);
 
         virtual void show() = 0;//for test
 
@@ -61,6 +65,15 @@ namespace hyn::reflect {
 
         ClassField *get_field(const std::string &class_name, const std::string &field_name);
 
+    public:
+        void register_class_method(const std::string &class_name, const std::string &method_name, uintptr_t method);
+
+        int get_class_method_count(const std::string &class_name);
+
+        ClassMethod *get_method(const std::string &class_name, int pos);
+
+        ClassMethod *get_method(const std::string &class_name, const std::string &method_name);
+
     private:
         ClassFactory() = default;
 
@@ -68,6 +81,8 @@ namespace hyn::reflect {
 
         std::map<std::string, hyn::reflect::create_object> m_class_map;
         std::map<std::string, std::vector<ClassField *>> m_class_fields;
+        std::map<std::string, std::vector<ClassMethod *>> m_class_method;
+
     };
 }
 

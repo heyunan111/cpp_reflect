@@ -21,6 +21,11 @@ namespace hyn::reflect {
             sigleton::Sigleton<ClassFactory>::get_instance()->register_class_field(class_name, field_name, type,
                                                                                    offset);
         }
+
+        ClassRegister(const std::string &class_name, const std::string &method_name, uintptr_t method) {
+            std::cout << class_name << " register method " << method_name << std::endl;
+            sigleton::Sigleton<ClassFactory>::get_instance()->register_class_method(class_name, method_name, method);
+        }
     };
 
 #define REGISTER_CLASS(class_name)                          \
@@ -36,6 +41,10 @@ namespace hyn::reflect {
 class_name class_name##field_name;                               \
 hyn::reflect::ClassRegister class_register_##class_name##field_name(#class_name,#field_name,#field_type,((size_t)(&(class_name##field_name).field_name)-(size_t)(&class_name##field_name)))
 
+
+#define REGISTER_CLASS_METHOD(class_name, method_name)                                \
+std::function<void(class_name *)> class_name##method_name##_method = &class_name::method_name; \
+hyn::reflect::ClassRegister class_register_##class_name##method_name(#class_name,#method_name,(uintptr_t)&(class_name##method_name##_method))
 
 }
 #endif //CPP_REFLECT_CLASSREGISTER_H

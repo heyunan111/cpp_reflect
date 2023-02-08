@@ -46,6 +46,31 @@ hyn::reflect::ClassFactory::get_field(const std::string &class_name, const std::
     return nullptr;
 }
 
+void hyn::reflect::ClassFactory::register_class_method(const std::string &class_name, const std::string &method_name,
+                                                       uintptr_t method) {
+    m_class_method[class_name].push_back(new ClassMethod(method_name, method));
+}
+
+hyn::reflect::ClassMethod *hyn::reflect::ClassFactory::get_method(const std::string &class_name, int pos) {
+    int size = m_class_method[class_name].size();
+    if (pos < 0 || pos > size)
+        return nullptr;
+    return m_class_method[class_name][pos];
+}
+
+hyn::reflect::ClassMethod *
+hyn::reflect::ClassFactory::get_method(const std::string &class_name, const std::string &method_name) {
+    for (auto it = m_class_method[class_name].begin(); it < m_class_method[class_name].end(); ++it) {
+        if ((*it)->get_name() == method_name)
+            return (*it);
+    }
+    return nullptr;
+}
+
+int hyn::reflect::ClassFactory::get_class_method_count(const std::string &class_name) {
+    return m_class_method[class_name].size();
+}
+
 
 /*                                class:Object                                                          */
 int hyn::reflect::Object::get_field_count() {
@@ -66,4 +91,12 @@ const std::string &hyn::reflect::Object::get_m_class_name() const {
 
 void hyn::reflect::Object::set_m_class_name(const std::string &class_name) {
     this->m_class_name = class_name;
+}
+
+void hyn::reflect::Object::call(const std::string &method_name) {
+    ClassMethod *method = sigleton::Sigleton<ClassFactory>::get_instance()->get_method(m_class_name, method_name);
+    auto func = method->get_method();
+    typedef std::function<void(decltype(this))> class_method;
+    (*((class_method *) func))(this);
+
 }

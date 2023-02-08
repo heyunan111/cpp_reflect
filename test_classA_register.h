@@ -20,6 +20,14 @@ public:
         cout << name;
     }
 
+    void f() {
+        cout << "func" << endl;
+    }
+
+    void f2() {
+        cout << "f2" << endl;
+    }
+
 public:
     string name;
     int m_age;
@@ -33,6 +41,10 @@ REGISTER_CLASS_FIELD(A, name, string);
 REGISTER_CLASS_FIELD(A, m_age, int);
 
 REGISTER_CLASS_FIELD(A, m_vec, vector<int>);
+
+REGISTER_CLASS_METHOD(A, f);
+
+REGISTER_CLASS_METHOD(A, f2);
 
 void test_classA_register() {
     hyn::reflect::ClassFactory *factory = hyn::sigleton::Sigleton<hyn::reflect::ClassFactory>::get_instance();
@@ -55,6 +67,9 @@ void test_classA_register() {
         cout << field->get_name() << "," << field->get_type() << "," << field->get_offset() << endl;
     }
 
+    a->call("f");
+    cout << endl;
+    a->call("f2");
 }
 
 #endif //CPP_REFLECT_TEST_CLASSA_REGISTER_H
